@@ -6,6 +6,9 @@ export class DemoScene extends Phaser.Scene {
 		super({
 			key: 'DemoScene'
         });
+
+        this.player = null;
+        this.platforms = null;
 	}
 
 	preload() {
@@ -20,40 +23,11 @@ export class DemoScene extends Phaser.Scene {
     create() {
         this.add.image(400, 300, 'background');
 
-        let platforms = this.physics.add.staticGroup();
+        this.createPlatforms();
+        this.createPlayer();
+        this.createAnimation();
 
-        this.platforms.create(400, 568, 'platform').setScale(2).refreshBody();
-
-        this.platforms.create(600, 400, 'platform');
-        this.platforms.create(50, 250, 'platform');
-        this.platforms.create(750, 220, 'platform');
-
-        this.player = this.physics.add.sprite(100, 450, 'zeta');
-
-        this.player.setBounce(0.2);
-        this.player.setCollideWorldBounds(true);
-
-        this.anims.create({
-            key: 'left',
-            frames: this.anims.generateFrameNumbers('zeta', { start: 0, end: 3 }),
-            frameRate: 10,
-            repeat: -1
-        });
-
-        this.anims.create({
-            key: 'turn',
-            frames: [ { key: 'zeta', frame: 4 } ],
-            frameRate: 20
-        });
-
-        this.anims.create({
-            key: 'right',
-            frames: this.anims.generateFrameNumbers('zeta', { start: 5, end: 8 }),
-            frameRate: 10,
-            repeat: -1
-        });
-
-        this.physics.add.collider(this.player, platforms);
+        this.physics.add.collider(this.player, this.platforms);
 
         this.cursors = this.input.keyboard.createCursorKeys();
     }
@@ -86,4 +60,53 @@ export class DemoScene extends Phaser.Scene {
 
     }
 
+    createPlatforms() {
+        this.platforms = this.physics.add.staticGroup();
+
+        this.platforms.create(400, 572, 'platform').setScale(2).refreshBody();
+
+        this.platforms.create(100, 135, 'platform');
+        this.platforms.create(700, 135, 'platform');
+        
+        this.platforms.create(400, 270, 'platform');
+
+        this.platforms.create(50, 405, 'platform');
+        this.platforms.create(750, 405, 'platform');
+
+
+        // this.platforms.create(600, 400, 'platform');
+        // this.platforms.create(50, 250, 'platform');
+        // this.platforms.create(750, 220, 'platform');
+    }
+
+    createPlayer() {
+        this.player = this.physics.add.sprite(100, 450, 'zeta');
+
+        this.player.setBounce(0.2);
+        this.player.setCollideWorldBounds(true);
+    }
+
+    createAnimation() {
+        this.anims.create({
+            key: 'left',
+            frames: this.anims.generateFrameNumbers('zeta', { start: 0, end: 3 }),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'turn',
+            frames: [ { key: 'zeta', frame: 4 } ],
+            frameRate: 20
+        });
+
+        this.anims.create({
+            key: 'right',
+            frames: this.anims.generateFrameNumbers('zeta', { start: 5, end: 8 }),
+            frameRate: 10,
+            repeat: -1
+        });
+    }
+
+    
 }
