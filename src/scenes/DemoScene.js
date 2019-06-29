@@ -34,27 +34,18 @@ export class DemoScene extends Phaser.Scene {
 
     update() {
 
-        if (this.cursors.left.isDown)
-        {
+        if (this.cursors.left.isDown){
             this.player.setVelocityX(-160);
-
             this.player.anims.play('left', true);
-        }
-        else if (this.cursors.right.isDown)
-        {
+        }else if (this.cursors.right.isDown){
             this.player.setVelocityX(160);
-
             this.player.anims.play('right', true);
-        }
-        else
-        {
+        }else{
             this.player.setVelocityX(0);
-
             this.player.anims.play('turn');
         }
 
-        if (this.cursors.up.isDown && this.player.body.touching.down)
-        {
+        if (this.cursors.up.isDown && this.player.body.touching.down){
             this.player.setVelocityY(-330);
         }
 
@@ -62,8 +53,6 @@ export class DemoScene extends Phaser.Scene {
 
     createPlatforms() {
         this.platforms = this.physics.add.staticGroup();
-
-        this.platforms.create(400, 572, 'platform').setScale(2).refreshBody();
 
         this.platforms.create(100, 135, 'platform');
         this.platforms.create(700, 135, 'platform');
@@ -73,10 +62,7 @@ export class DemoScene extends Phaser.Scene {
         this.platforms.create(50, 405, 'platform');
         this.platforms.create(750, 405, 'platform');
 
-
-        // this.platforms.create(600, 400, 'platform');
-        // this.platforms.create(50, 250, 'platform');
-        // this.platforms.create(750, 220, 'platform');
+        this.platforms.create(400, 572, 'platform').setScale(2).refreshBody();
     }
 
     createPlayer() {
