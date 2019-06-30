@@ -13,10 +13,11 @@ export class DemoScene extends Phaser.Scene {
 
 	preload() {
         this.load.image('background', 'assets/images/background.png');
+        this.load.image('ground', 'assets/images/ground.png');
         this.load.image('platform', 'assets/images/platform.png');
         this.load.spritesheet('zeta', 
             'assets/images/zeta_spritesheet.png',
-            { frameWidth: 32, frameHeight: 48 }
+            { frameWidth: 40, frameHeight: 60 }
         );
     }
 
@@ -35,10 +36,10 @@ export class DemoScene extends Phaser.Scene {
     update() {
 
         if (this.cursors.left.isDown){
-            this.player.setVelocityX(-160);
+            this.player.setVelocityX(-200);
             this.player.anims.play('left', true);
         }else if (this.cursors.right.isDown){
-            this.player.setVelocityX(160);
+            this.player.setVelocityX(200);
             this.player.anims.play('right', true);
         }else{
             this.player.setVelocityX(0);
@@ -62,7 +63,7 @@ export class DemoScene extends Phaser.Scene {
         this.platforms.create(50, 405, 'platform');
         this.platforms.create(750, 405, 'platform');
 
-        this.platforms.create(400, 572, 'platform').setScale(2).refreshBody();
+        this.platforms.create(400, 572, 'ground');
     }
 
     createPlayer() {
@@ -76,7 +77,7 @@ export class DemoScene extends Phaser.Scene {
         this.anims.create({
             key: 'left',
             frames: this.anims.generateFrameNumbers('zeta', { start: 0, end: 3 }),
-            frameRate: 10,
+            frameRate: 20,
             repeat: -1
         });
 
@@ -89,7 +90,7 @@ export class DemoScene extends Phaser.Scene {
         this.anims.create({
             key: 'right',
             frames: this.anims.generateFrameNumbers('zeta', { start: 5, end: 8 }),
-            frameRate: 10,
+            frameRate: 20,
             repeat: -1
         });
     }
