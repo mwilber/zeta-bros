@@ -9,6 +9,7 @@ export class DemoScene extends Phaser.Scene {
 
         this.player = null;
         this.platforms = null;
+        this.unlockCt = 0;
 	}
 
 	preload() {
@@ -19,16 +20,50 @@ export class DemoScene extends Phaser.Scene {
             'assets/images/zeta_spritesheet.png',
             { frameWidth: 40, frameHeight: 60 }
         );
+        this.load.spritesheet('door', 
+            'assets/images/door.png',
+            { frameWidth: 64, frameHeight: 64 }
+        );
+
+        this.load.spritesheet('switch', 
+            'assets/images/switch.png',
+            { frameWidth: 8, frameHeight: 16 }
+        );
     }
 
     create() {
         this.add.image(400, 300, 'background');
+
+        // Add the door
+        this.door = this.physics.add.staticGroup();
+        this.door.create(400, 508, 'door');
+
+        // Add the switches
+        this.switches = this.physics.add.staticGroup();
+        this.switches.create(75, 75, 'switch');
+        this.switches.create(75, 345, 'switch');
+        
 
         this.createPlatforms();
         this.createPlayer();
         this.createAnimation();
 
         this.physics.add.collider(this.player, this.platforms);
+        this.physics.add.overlap(this.player, this.door, (event)=>{
+            console.log('door collision');
+        });
+
+        this.physics.add.overlap(this.player, this.switches, (event, collider)=>{
+            //console.log('switch collision', event, collider);
+            if(collider.active){
+                collider.setActive(false);
+                collider.anims.play('switchOn');
+                this.unlockCt++;
+                if(this.unlockCt >= 2){
+                this.door.getFirst(true).anims.play('doorOpen');
+                }
+            }
+        });
 
         this.cursors = this.input.keyboard.createCursorKeys();
     }
@@ -92,6 +127,24 @@ export class DemoScene extends Phaser.Scene {
             frames: this.anims.generateFrameNumbers('zeta', { start: 5, end: 8 }),
             frameRate: 20,
             repeat: -1
+        });
+
+        this.anims.create({
+            key: 'switchOn',
+            frames: [ { key: 'switch', frame: 1 } ],
+            frameRate: 20,
+        });
+
+        this.anims.create({
+            key: 'switchOff',
+            frames: [ { key: 'switch', frame: 1 } ],
+            frameRate: 20,
+        });
+
+        this.anims.create({
+            key: 'doorOpen',
+            frames: this.anims.generateFrameNumbers('door', { start: 1, end: 3 }),
+            frameRate: 10
         });
     }
 
