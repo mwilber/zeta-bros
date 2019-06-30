@@ -5,9 +5,9 @@ const CssPlugin = require('extract-css-chunks-webpack-plugin');
 
 const htmlMetadata = {
     domain: 'greenzeta.com',
-    title: 'GreenZeta Webpack Boilerplate',
+    title: 'Zeta Bros',
     author: 'Matthew Wilber',
-    description: 'Webpack boilerplate using babel & sass.',
+    description: 'HTML5 Game Demonstration Using the Phaser Framework',
     themecolor: '#7bb951',
     twittername: 'greenzeta',
     facebookid: '631337813',
