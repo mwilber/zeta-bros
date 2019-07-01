@@ -10,6 +10,7 @@ export class DemoScene extends Phaser.Scene {
         this.player = null;
         this.platforms = null;
         this.unlockCt = 0;
+        this.bots = null;
 	}
 
 	preload() {
@@ -29,6 +30,8 @@ export class DemoScene extends Phaser.Scene {
             'assets/images/switch.png',
             { frameWidth: 8, frameHeight: 16 }
         );
+
+        this.load.image('bot', 'assets/images/security_bot.png');
     }
 
     create() {
@@ -46,13 +49,19 @@ export class DemoScene extends Phaser.Scene {
         this.switches.create(75, 345, 'switch');
         this.switches.create(775, 75, 'switch');
         this.switches.create(775, 345, 'switch');
-        
+
+        //Create an empty group for the security bots
+        this.bots = this.physics.add.group();
 
         this.createPlatforms();
         this.createPlayer();
         this.createAnimation();
 
         this.physics.add.collider(this.player, this.platforms);
+        this.physics.add.collider(this.bots, this.platforms);
+        this.physics.add.collider(this.player, this.bots, (event)=>{
+            this.scene.restart();
+        });
         this.physics.add.overlap(this.player, this.door, (event)=>{
             if(this.unlockCt >= 4){
                 this.scene.restart();
@@ -68,6 +77,7 @@ export class DemoScene extends Phaser.Scene {
                 if(this.unlockCt >= 4){
                 this.door.getFirst(true).anims.play('doorOpen');
                 }
+                this.createBot();
             }
         });
 
@@ -91,6 +101,10 @@ export class DemoScene extends Phaser.Scene {
             this.player.setVelocityY(-750);
         }
 
+    }
+
+    createBot(){
+        this.bots.create(775, 345, 'bot');
     }
 
     createPlatforms() {
