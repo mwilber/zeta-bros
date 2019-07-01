@@ -82,6 +82,8 @@ export class DemoScene extends Phaser.Scene {
         });
 
         this.cursors = this.input.keyboard.createCursorKeys();
+
+        this.createBot();
     }
 
     update() {
@@ -104,7 +106,12 @@ export class DemoScene extends Phaser.Scene {
     }
 
     createBot(){
-        this.bots.create(775, 345, 'bot');
+        let tmpbot = this.bots.create(700, 75, 'bot').
+            setCollideWorldBounds(true).
+            setVelocityX(100);
+        tmpbot.directionHolder = 100;
+        tmpbot.body.onWorldBounds = true;
+        tmpbot.body.world.on('worldbounds', this.handleWorldbounds, tmpbot);
     }
 
     createPlatforms() {
@@ -166,6 +173,13 @@ export class DemoScene extends Phaser.Scene {
             frames: this.anims.generateFrameNumbers('door', { start: 1, end: 3 }),
             frameRate: 10
         });
+    }
+
+    handleWorldbounds(event){
+        //console.log('worldbounds', event);
+        //console.log("set velocity to ", -event.gameObject.body.velocity.x)
+        event.gameObject.directionHolder = -event.gameObject.directionHolder;
+        event.gameObject.setVelocityX(event.gameObject.directionHolder);
     }
 
     
