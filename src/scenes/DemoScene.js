@@ -32,6 +32,8 @@ export class DemoScene extends Phaser.Scene {
     }
 
     create() {
+        this.unlockCt = 0;
+
         this.add.image(400, 300, 'background');
 
         // Add the door
@@ -42,6 +44,8 @@ export class DemoScene extends Phaser.Scene {
         this.switches = this.physics.add.staticGroup();
         this.switches.create(75, 75, 'switch');
         this.switches.create(75, 345, 'switch');
+        this.switches.create(775, 75, 'switch');
+        this.switches.create(775, 345, 'switch');
         
 
         this.createPlatforms();
@@ -50,7 +54,9 @@ export class DemoScene extends Phaser.Scene {
 
         this.physics.add.collider(this.player, this.platforms);
         this.physics.add.overlap(this.player, this.door, (event)=>{
-            console.log('door collision');
+            if(this.unlockCt >= 4){
+                this.scene.restart();
+            }
         });
 
         this.physics.add.overlap(this.player, this.switches, (event, collider)=>{
@@ -59,7 +65,7 @@ export class DemoScene extends Phaser.Scene {
                 collider.setActive(false);
                 collider.anims.play('switchOn');
                 this.unlockCt++;
-                if(this.unlockCt >= 2){
+                if(this.unlockCt >= 4){
                 this.door.getFirst(true).anims.play('doorOpen');
                 }
             }
