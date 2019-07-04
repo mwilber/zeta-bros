@@ -16,6 +16,7 @@ export class DemoScene extends Phaser.Scene {
 	preload() {
         this.load.image('background', 'assets/images/background.png');
         this.load.image('ground', 'assets/images/ground.png');
+        this.load.image('wall', 'assets/images/wall.png');
         this.load.image('platform', 'assets/images/platform.png');
         this.load.spritesheet('zeta', 
             'assets/images/zeta_spritesheet.png',
@@ -54,11 +55,20 @@ export class DemoScene extends Phaser.Scene {
         this.bots = this.physics.add.group();
 
         this.createPlatforms();
+        this.createWalls();
         this.createPlayer();
         this.createAnimation();
 
         this.physics.add.collider(this.player, this.platforms);
         this.physics.add.collider(this.bots, this.platforms);
+        this.physics.add.collider(this.bots, this.walls, (collider, subject)=>{
+            console.log('bot hit wall', collider.body, subject.body);
+            if(subject.body.touching.left){
+                collider.setVelocityX(-100);
+            }else if(subject.body.touching.right){
+                collider.setVelocityX(100);
+            }
+        });
         this.physics.add.collider(this.player, this.bots, (event)=>{
             this.scene.restart();
         });
@@ -108,10 +118,11 @@ export class DemoScene extends Phaser.Scene {
     createBot(){
         let tmpbot = this.bots.create(700, 75, 'bot').
             setCollideWorldBounds(true).
+            setActive(true).
             setVelocityX(100);
-        tmpbot.directionHolder = 100;
-        tmpbot.body.onWorldBounds = true;
-        tmpbot.body.world.on('worldbounds', this.handleWorldbounds, tmpbot);
+        //tmpbot.directionHolder = 100;
+        //tmpbot.body.onWorldBounds = true;
+        //tmpbot.body.world.on('worldbounds', this.handleWorldbounds, tmpbot);
     }
 
     createPlatforms() {
@@ -126,6 +137,15 @@ export class DemoScene extends Phaser.Scene {
         this.platforms.create(750, 405, 'platform');
 
         this.platforms.create(400, 572, 'ground');
+
+        
+    }
+
+    createWalls() {
+        this.walls = this.physics.add.staticGroup();
+
+        this.walls.create(0, 300, 'wall').setActive(true);
+        this.walls.create(800, 300, 'wall').setActive(true);
     }
 
     createPlayer() {
