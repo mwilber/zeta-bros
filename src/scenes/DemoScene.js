@@ -26,12 +26,10 @@ export class DemoScene extends Phaser.Scene {
             'assets/images/door.png',
             { frameWidth: 64, frameHeight: 64 }
         );
-
         this.load.spritesheet('switch', 
             'assets/images/switch.png',
             { frameWidth: 8, frameHeight: 16 }
         );
-
         this.load.image('bot', 'assets/images/security_bot.png');
     }
 
@@ -85,7 +83,7 @@ export class DemoScene extends Phaser.Scene {
                 collider.anims.play('switchOn');
                 this.unlockCt++;
                 if(this.unlockCt >= 4){
-                this.door.getFirst(true).anims.play('doorOpen');
+                    this.door.getFirst(true).anims.play('doorOpen');
                 }
                 this.createBot();
             }
@@ -93,7 +91,6 @@ export class DemoScene extends Phaser.Scene {
 
         this.cursors = this.input.keyboard.createCursorKeys();
 
-        this.createBot();
     }
 
     update() {
@@ -115,14 +112,8 @@ export class DemoScene extends Phaser.Scene {
 
     }
 
-    createBot(){
-        let tmpbot = this.bots.create(700, 75, 'bot').
-            setCollideWorldBounds(true).
-            setActive(true).
-            setVelocityX(100);
-        //tmpbot.directionHolder = 100;
-        //tmpbot.body.onWorldBounds = true;
-        //tmpbot.body.world.on('worldbounds', this.handleWorldbounds, tmpbot);
+    createBot(position){
+        this.bots.create(700, 75, 'bot').setVelocityX(-100);
     }
 
     createPlatforms() {
@@ -196,8 +187,6 @@ export class DemoScene extends Phaser.Scene {
     }
 
     handleWorldbounds(event){
-        //console.log('worldbounds', event);
-        //console.log("set velocity to ", -event.gameObject.body.velocity.x)
         event.gameObject.directionHolder = -event.gameObject.directionHolder;
         event.gameObject.setVelocityX(event.gameObject.directionHolder);
     }
