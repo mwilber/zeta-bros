@@ -36,60 +36,31 @@ export class DemoScene extends Phaser.Scene {
     create() {
         this.unlockCt = 0;
 
+        // Add the background image
         this.add.image(400, 300, 'background');
 
-        // Add the door
-        this.door = this.physics.add.staticGroup();
-        this.door.create(400, 508, 'door');
+        // Set up sprite animations
+        this.initAnimation();
 
-        // Add the switches
-        this.switches = this.physics.add.staticGroup();
-        this.switches.create(75, 75, 'switch');
-        this.switches.create(75, 345, 'switch');
-        this.switches.create(775, 75, 'switch');
-        this.switches.create(775, 345, 'switch');
+        // Add a game controller with devault arrow keys
+        this.cursors = this.input.keyboard.createCursorKeys();
 
+        // Set up all the game objects
+        this.door           = this.createDoor();
+        this.switches       = this.createSwitches();
+        this.platforms      = this.createPlatforms();
+        this.walls          = this.createWalls();
+        this.player         = this.createPlayer();
         //Create an empty group for the security bots
         this.bots = this.physics.add.group();
 
-        this.createPlatforms();
-        this.createWalls();
-        this.createPlayer();
-        this.createAnimation();
-
+        // Set up physics colliders
         this.physics.add.collider(this.player, this.platforms);
         this.physics.add.collider(this.bots, this.platforms);
-        this.physics.add.collider(this.bots, this.walls, (collider, subject)=>{
-            console.log('bot hit wall', collider.body, subject.body);
-            if(subject.body.touching.left){
-                collider.setVelocityX(-100);
-            }else if(subject.body.touching.right){
-                collider.setVelocityX(100);
-            }
-        });
-        this.physics.add.collider(this.player, this.bots, (event)=>{
-            this.scene.restart();
-        });
-        this.physics.add.overlap(this.player, this.door, (event)=>{
-            if(this.unlockCt >= 4){
-                this.scene.restart();
-            }
-        });
-
-        this.physics.add.overlap(this.player, this.switches, (event, collider)=>{
-            //console.log('switch collision', event, collider);
-            if(collider.active){
-                collider.setActive(false);
-                collider.anims.play('switchOn');
-                this.unlockCt++;
-                if(this.unlockCt >= 4){
-                    this.door.getFirst(true).anims.play('doorOpen');
-                }
-                this.createBot();
-            }
-        });
-
-        this.cursors = this.input.keyboard.createCursorKeys();
+        this.physics.add.collider(this.bots, this.walls, this.handleCollisionWall.bind(this));
+        this.physics.add.collider(this.player, this.bots, this.handleCollisionEnemy.bind(this));
+        this.physics.add.overlap(this.player, this.door, this.handleOverlapDoor.bind(this));
+        this.physics.add.overlap(this.player, this.switches, this.handleOverlapSwitch.bind(this));
 
     }
 
@@ -112,41 +83,90 @@ export class DemoScene extends Phaser.Scene {
 
     }
 
-    createBot(position){
-        this.bots.create(700, 75, 'bot').setVelocityX(-100);
+    createDoor(){
+        let door = this.physics.add.staticGroup();
+        door.create(400, 508, 'door');
+
+        return door;
     }
 
     createPlatforms() {
-        this.platforms = this.physics.add.staticGroup();
+        let platforms = this.physics.add.staticGroup();
 
-        this.platforms.create(100, 135, 'platform');
-        this.platforms.create(700, 135, 'platform');
+        platforms.create(100, 135, 'platform');
+        platforms.create(700, 135, 'platform');
         
-        this.platforms.create(400, 270, 'platform');
+        platforms.create(400, 270, 'platform');
 
-        this.platforms.create(50, 405, 'platform');
-        this.platforms.create(750, 405, 'platform');
+        platforms.create(50, 405, 'platform');
+        platforms.create(750, 405, 'platform');
 
-        this.platforms.create(400, 572, 'ground');
+        platforms.create(400, 572, 'ground');
 
-        
-    }
-
-    createWalls() {
-        this.walls = this.physics.add.staticGroup();
-
-        this.walls.create(0, 300, 'wall').setActive(true);
-        this.walls.create(800, 300, 'wall').setActive(true);
+        return platforms;
     }
 
     createPlayer() {
-        this.player = this.physics.add.sprite(100, 450, 'zeta');
+        let player = this.physics.add.sprite(100, 450, 'zeta');
 
-        this.player.setBounce(0.2);
-        this.player.setCollideWorldBounds(true);
+        player.setBounce(0.2);
+        player.setCollideWorldBounds(true);
+
+        return player;
     }
 
-    createAnimation() {
+    createSwitches() {
+        let switches = this.physics.add.staticGroup();
+        switches.create(75, 75, 'switch');
+        switches.create(75, 345, 'switch');
+        switches.create(775, 75, 'switch');
+        switches.create(775, 345, 'switch');
+
+        return switches;
+    }
+
+    createWalls() {
+        let walls = this.physics.add.staticGroup();
+
+        walls.create(0, 300, 'wall').setActive(true);
+        walls.create(800, 300, 'wall').setActive(true);
+
+        return walls;
+    }
+
+    handleCollisionWall(event, collider){
+        if(collider.body.touching.left){
+            event.setVelocityX(-100);
+        }else if(collider.body.touching.right){
+            event.setVelocityX(100);
+        }
+
+        return true;
+    }
+
+    handleCollisionEnemy(event, collider) {
+        this.scene.restart();
+    }
+
+    handleOverlapDoor(event, collider) {
+        if(this.unlockCt >= 4){
+            this.scene.restart();
+        }
+    }
+
+    handleOverlapSwitch(event, collider) {
+        if(collider.active){
+            collider.setActive(false);
+            collider.anims.play('switchOn');
+            this.unlockCt++;
+            if(this.unlockCt >= 4){
+                this.door.getFirst(true).anims.play('doorOpen');
+            }
+            this.spawnBot();
+        }
+    }
+
+    initAnimation() {
         this.anims.create({
             key: 'left',
             frames: this.anims.generateFrameNumbers('zeta', { start: 0, end: 3 }),
@@ -186,10 +206,8 @@ export class DemoScene extends Phaser.Scene {
         });
     }
 
-    handleWorldbounds(event){
-        event.gameObject.directionHolder = -event.gameObject.directionHolder;
-        event.gameObject.setVelocityX(event.gameObject.directionHolder);
+    spawnBot(position){
+        this.bots.create(700, 75, 'bot').setVelocityX(-100);
     }
-
     
 }
