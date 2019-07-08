@@ -7,10 +7,8 @@ export class DemoScene extends Phaser.Scene {
 			key: 'DemoScene'
         });
 
-        this.player = null;
-        this.platforms = null;
         this.unlockCt = 0;
-        this.bots = null;
+        this.unlockTotal = 4;
 	}
 
 	preload() {
@@ -156,13 +154,19 @@ export class DemoScene extends Phaser.Scene {
 
     handleOverlapSwitch(event, collider) {
         if(collider.active){
+            // Turn off the switch so it can be pressed just once
             collider.setActive(false);
+            // Update the sprite
             collider.anims.play('switchOn');
             this.unlockCt++;
-            if(this.unlockCt >= 4){
+            if(this.unlockCt >= this.unlockTotal){
                 this.door.getFirst(true).anims.play('doorOpen');
             }
-            this.spawnBot();
+            if(collider.x > (this.game.canvas.width/2)){
+                this.spawnBot('left');
+            }else{
+                this.spawnBot();
+            }
         }
     }
 
@@ -206,8 +210,15 @@ export class DemoScene extends Phaser.Scene {
         });
     }
 
-    spawnBot(position){
-        this.bots.create(700, 75, 'bot').setVelocityX(-100);
+    spawnBot(side){
+        // Default to right side
+        let position = 700;
+        let velocity = -100;
+        if(side === 'left'){
+            position = 100;
+            velocity = 100;
+        }
+        this.bots.create(position, 75, 'bot').setVelocityX(velocity);
     }
     
 }
