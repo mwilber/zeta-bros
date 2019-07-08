@@ -7,8 +7,10 @@ export class DemoScene extends Phaser.Scene {
 			key: 'DemoScene'
         });
 
+        this.levelCt = 1;
         this.unlockCt = 0;
         this.unlockTotal = 4;
+
 	}
 
 	preload() {
@@ -32,6 +34,7 @@ export class DemoScene extends Phaser.Scene {
     }
 
     create() {
+        
         this.unlockCt = 0;
 
         // Add the background image
@@ -45,6 +48,7 @@ export class DemoScene extends Phaser.Scene {
 
         // Set up all the game objects
         this.door           = this.createDoor();
+        this.doorsign       = this.createDoorSign();
         this.switches       = this.createSwitches();
         this.platforms      = this.createPlatforms();
         this.walls          = this.createWalls();
@@ -60,6 +64,8 @@ export class DemoScene extends Phaser.Scene {
         this.physics.add.overlap(this.player, this.door, this.handleOverlapDoor.bind(this));
         this.physics.add.overlap(this.player, this.switches, this.handleOverlapSwitch.bind(this));
 
+        // Set the level indicator
+        this.doorsign.setText(this.levelCt);
     }
 
     update() {
@@ -86,6 +92,11 @@ export class DemoScene extends Phaser.Scene {
         door.create(400, 508, 'door');
 
         return door;
+    }
+
+    createDoorSign(){
+        this.add.text(380, 410, 'LEVEL', { fontSize: '12px', fill: '#ff0000', align: 'center', fontFamily: 'sans-serif' });
+        return this.add.text(385, 420, '0', { fontSize: '48px', fill: '#ff0000', align: 'center', fontFamily: 'sans-serif' });
     }
 
     createPlatforms() {
@@ -148,6 +159,7 @@ export class DemoScene extends Phaser.Scene {
 
     handleOverlapDoor(event, collider) {
         if(this.unlockCt >= 4){
+            this.levelCt++;
             this.scene.restart();
         }
     }
@@ -162,6 +174,7 @@ export class DemoScene extends Phaser.Scene {
             if(this.unlockCt >= this.unlockTotal){
                 this.door.getFirst(true).anims.play('doorOpen');
             }
+            return;
             if(collider.x > (this.game.canvas.width/2)){
                 this.spawnBot('left');
             }else{
