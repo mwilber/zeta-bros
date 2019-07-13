@@ -6,9 +6,6 @@ export class GameScene extends Phaser.Scene {
 		super(config);
 
         this.levelCt = 1;
-        this.unlockCt = 0;
-        this.unlockTotal = 4;
-
 	}
 
 	preload() {
@@ -45,9 +42,8 @@ export class GameScene extends Phaser.Scene {
         this.cursors = this.input.keyboard.createCursorKeys();
 
         // Set up all the game objects
-        this.door           = this.createDoor();
+        this.door           = this.createDoors();
         this.doorsign       = this.createDoorSign();
-        this.switches       = this.createSwitches();
         this.platforms      = this.createPlatforms();
         this.walls          = this.createWalls();
         this.player         = this.createPlayer();
@@ -60,13 +56,12 @@ export class GameScene extends Phaser.Scene {
         this.physics.add.collider(this.bots, this.walls, this.handleCollisionWall.bind(this));
         this.physics.add.collider(this.player, this.bots, this.handleCollisionEnemy.bind(this));
         this.physics.add.overlap(this.player, this.door, this.handleOverlapDoor.bind(this));
-        this.physics.add.overlap(this.player, this.switches, this.handleOverlapSwitch.bind(this));
 
         // Set the level indicator
         this.doorsign.setText(this.levelCt);
     }
 
-    update() {
+    update(scenetime) {
 
         if (this.cursors.left.isDown){
             this.player.setVelocityX(-200);
@@ -85,11 +80,11 @@ export class GameScene extends Phaser.Scene {
 
     }
 
-    createDoor(){
+    createDoors(){
         let door = this.physics.add.staticGroup();
-        door.create(400, 508, 'door', 0, true, false);
 
-        door.create(300, 508, 'door', 3);
+        // Entry door is inactive
+        door.create(400, 508, 'door', 0, true, false);
 
         return door;
     }
@@ -124,16 +119,6 @@ export class GameScene extends Phaser.Scene {
         return player;
     }
 
-    createSwitches() {
-        let switches = this.physics.add.staticGroup();
-        switches.create(75, 75, 'switch');
-        switches.create(75, 345, 'switch');
-        switches.create(775, 75, 'switch');
-        switches.create(775, 345, 'switch');
-
-        return switches;
-    }
-
     createWalls() {
         let walls = this.physics.add.staticGroup();
 
@@ -158,33 +143,9 @@ export class GameScene extends Phaser.Scene {
     }
 
     handleOverlapDoor(event, collider) {
-        // console.log('door overlap', event, collider);
-        // if(this.unlockCt >= 4){
-        //     this.levelCt++;
-        //     this.scene.restart();
-        // }
         if(collider.active){
             // Load the next scene
             this.scene.start(this.scene.manager.getAt(this.scene.getIndex()+1));
-        }
-    }
-
-    handleOverlapSwitch(event, collider) {
-        if(collider.active){
-            // Turn off the switch so it can be pressed just once
-            collider.setActive(false);
-            // Update the sprite
-            collider.anims.play('switchOn');
-            this.unlockCt++;
-            if(this.unlockCt >= this.unlockTotal){
-                this.door.getFirst(true).anims.play('doorOpen');
-            }
-            return;
-            if(collider.x > (this.game.canvas.width/2)){
-                this.spawnBot('left');
-            }else{
-                this.spawnBot();
-            }
         }
     }
 
