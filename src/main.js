@@ -19,6 +19,7 @@ import '../styles/main.scss';
 import 'phaser';
 import { IntroScene } from './scenes/IntroScene';
 import { Level1 } from './levels/level1';
+import { Level2 } from './levels/level2';
 
 const gameConfig = {
     type: Phaser.AUTO,
@@ -38,7 +39,6 @@ const gameConfig = {
     scene: [
         Level1,
         Level2,
-        Level3,
         IntroScene
     ]
 };

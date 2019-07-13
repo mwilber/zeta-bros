@@ -18,7 +18,7 @@ export class IntroScene extends Phaser.Scene {
         
         this.splash.setInteractive().on('pointerdown', () => { 
             console.log('start game'); 
-            this.scene.start('DemoScene');
+            this.scene.start('Level1');
         });
     }
 }
