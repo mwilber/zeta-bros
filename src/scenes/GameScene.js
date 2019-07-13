@@ -1,11 +1,9 @@
 
 import Phaser from 'phaser';
 
-export class DemoScene extends Phaser.Scene {
-    constructor() {
-		super({
-			key: 'DemoScene'
-        });
+export class GameScene extends Phaser.Scene {
+    constructor(config) {
+		super(config);
 
         this.levelCt = 1;
         this.unlockCt = 0;
@@ -89,7 +87,9 @@ export class DemoScene extends Phaser.Scene {
 
     createDoor(){
         let door = this.physics.add.staticGroup();
-        door.create(400, 508, 'door');
+        door.create(400, 508, 'door', 0, true, false);
+
+        door.create(300, 508, 'door', 3);
 
         return door;
     }
@@ -102,13 +102,13 @@ export class DemoScene extends Phaser.Scene {
     createPlatforms() {
         let platforms = this.physics.add.staticGroup();
 
-        platforms.create(100, 135, 'platform');
-        platforms.create(700, 135, 'platform');
+        // platforms.create(100, 135, 'platform');
+        // platforms.create(700, 135, 'platform');
         
-        platforms.create(400, 270, 'platform');
+        // platforms.create(400, 270, 'platform');
 
-        platforms.create(50, 405, 'platform');
-        platforms.create(750, 405, 'platform');
+        // platforms.create(50, 405, 'platform');
+        // platforms.create(750, 405, 'platform');
 
         platforms.create(400, 572, 'ground');
 
@@ -158,9 +158,14 @@ export class DemoScene extends Phaser.Scene {
     }
 
     handleOverlapDoor(event, collider) {
-        if(this.unlockCt >= 4){
-            this.levelCt++;
-            this.scene.restart();
+        // console.log('door overlap', event, collider);
+        // if(this.unlockCt >= 4){
+        //     this.levelCt++;
+        //     this.scene.restart();
+        // }
+        if(collider.active){
+            // Load the next scene
+            this.scene.start(this.scene.manager.getAt(this.scene.getIndex()+1));
         }
     }
 
