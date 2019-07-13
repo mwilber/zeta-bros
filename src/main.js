@@ -17,7 +17,6 @@ import '../app-shell.css';
 import '../styles/main.scss';
 
 import 'phaser';
-import { GameScene } from './scenes/GameScene';
 import { IntroScene } from './scenes/IntroScene';
 import { Level1 } from './levels/level1';
 
@@ -38,7 +37,6 @@ const gameConfig = {
     },
     scene: [
         Level1,
-        GameScene,
         IntroScene
     ]
 };
