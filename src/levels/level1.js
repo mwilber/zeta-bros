@@ -14,8 +14,11 @@ export class Level1 extends GameScene{
 
         let platforms = super.createPlatforms();
 
-        platforms.create(100, 135, 'platform');
-        platforms.create(700, 405, 'platform');
+        platforms.create(100, 180, 'platform');
+        platforms.create(500, 180, 'platform');
+
+        platforms.create(700, 360, 'platform');
+        platforms.create(300, 360, 'platform');
 
         return platforms;
     }
@@ -24,7 +27,7 @@ export class Level1 extends GameScene{
         let door = super.createDoors();
 
         // Add an exit door
-        door.create(300, 508, 'door', 3);
+        door.create(100, 132, 'door', 3);
 
         return door;
     }
@@ -32,7 +35,7 @@ export class Level1 extends GameScene{
     create() {
         super.create();
 
-        var timer = this.time.addEvent({
+        this.time.addEvent({
             delay: 5000,
             callback: (event)=>{
                 this.spawnBot('left');
