@@ -20,6 +20,7 @@ import 'phaser';
 import { IntroScene } from './scenes/IntroScene';
 import { Level1 } from './levels/level1';
 import { Level2 } from './levels/level2';
+import { EndScene } from './scenes/EndScene';
 
 const gameConfig = {
     type: Phaser.AUTO,
@@ -39,7 +40,8 @@ const gameConfig = {
     scene: [
         Level1,
         Level2,
-        IntroScene
+        IntroScene,
+        EndScene
     ]
 };
 

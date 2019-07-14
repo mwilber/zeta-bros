@@ -136,7 +136,7 @@ export class GameScene extends Phaser.Scene {
     }
 
     handleCollisionEnemy(event, collider) {
-        this.scene.restart();
+        this.scene.start('EndScene');
     }
 
     handleOverlapDoor(event, collider) {
