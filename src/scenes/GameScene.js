@@ -21,10 +21,6 @@ export class GameScene extends Phaser.Scene {
             'assets/images/door.png',
             { frameWidth: 64, frameHeight: 64 }
         );
-        this.load.spritesheet('switch', 
-            'assets/images/switch.png',
-            { frameWidth: 8, frameHeight: 16 }
-        );
         this.load.image('bot', 'assets/images/security_bot.png');
     }
 
@@ -113,6 +109,7 @@ export class GameScene extends Phaser.Scene {
     createPlayer() {
         let player = this.physics.add.sprite(100, 450, 'zeta');
 
+        player.setMass(1700);
         player.setBounce(0.2);
         player.setCollideWorldBounds(true);
 
@@ -168,18 +165,6 @@ export class GameScene extends Phaser.Scene {
             frames: this.anims.generateFrameNumbers('zeta', { start: 5, end: 8 }),
             frameRate: 20,
             repeat: -1
-        });
-
-        this.anims.create({
-            key: 'switchOn',
-            frames: [ { key: 'switch', frame: 1 } ],
-            frameRate: 20,
-        });
-
-        this.anims.create({
-            key: 'switchOff',
-            frames: [ { key: 'switch', frame: 1 } ],
-            frameRate: 20,
         });
 
         this.anims.create({
