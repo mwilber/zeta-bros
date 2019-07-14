@@ -9,11 +9,12 @@ export class GameScene extends Phaser.Scene {
 	}
 
 	preload() {
-
+        this.load.image('background', 'assets/images/background.png');
     }
 
     create() {
-
+        // Add the background image
+        this.add.image(400, 300, 'background');
     }
 
     update() {
