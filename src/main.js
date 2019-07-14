@@ -17,26 +17,3 @@ import '../app-shell.css';
 import '../styles/main.scss';
 
 import 'phaser';
-import { GameScene } from './scenes/GameScene';
-
-const gameConfig = {
-    type: Phaser.AUTO,
-    width: 800,
-    height: 600,
-    parent: 'phaser-game',
-    dom: {
-        createContainer: true
-    },
-    physics: {
-        default: 'arcade',
-        arcade: {
-            gravity: { y: 900 },
-            debug: false
-        }
-    },
-    scene: [
-        GameScene
-    ]
-};
-
-new Phaser.Game(gameConfig);
