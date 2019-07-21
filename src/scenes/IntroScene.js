@@ -23,6 +23,7 @@ export class IntroScene extends Phaser.Scene {
         this.beta = this.add.image(-204, 300, 'intro_beta');
 
         var timeline = this.tweens.createTimeline();
+        var timelineb = this.tweens.createTimeline();
         timeline.add({
             targets: this.bkg,
             alpha: 1,
@@ -33,16 +34,16 @@ export class IntroScene extends Phaser.Scene {
         timeline.add({
             targets: [this.alpha],
             x: 400,
-            ease: 'QuadraticOut',
+            ease: 'QuadraticIn',
             duration: 250,
             delay: 0
         });
-        timeline.add({
+        timelineb.add({
             targets: this.beta,
             x: 204,
-            ease: 'QuadraticOut',
+            ease: 'QuadraticIn',
             duration: 250,
-            delay: 0
+            delay: 1000
         });
         timeline.add({
             targets: this.title,
@@ -53,6 +54,7 @@ export class IntroScene extends Phaser.Scene {
         });
 
         timeline.play();
+        timelineb.play();
         
         this.alpha.setInteractive().on('pointerdown', () => { 
             localStorage.setItem("character", "alpha");
