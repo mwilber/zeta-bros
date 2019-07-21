@@ -26,6 +26,10 @@ export class GameScene extends Phaser.Scene {
             { frameWidth: 64, frameHeight: 64 }
         );
         this.load.image('bot', 'assets/images/security_bot.png');
+
+        this.load.audio('aud_end_game', 'assets/audio/end_game.wav');
+        this.load.audio('aud_jump', 'assets/audio/jump.wav');
+        this.load.audio('aud_walk', 'assets/audio/walk.wav');
     }
 
     create() {
@@ -40,6 +44,9 @@ export class GameScene extends Phaser.Scene {
 
         // Set up sprite animations
         this.initAnimation();
+
+        // Set up the sound fx
+        this.createAudio();
 
         // Add a game controller with devault arrow keys
         this.cursors = this.input.keyboard.createCursorKeys();
@@ -67,20 +74,30 @@ export class GameScene extends Phaser.Scene {
     update(scenetime) {
 
         if (this.cursors.left.isDown){
+            if(!this.audWalk.isPlaying && this.player.body.touching.down) this.audWalk.play();
             this.player.setVelocityX(-200);
             this.player.anims.play('left', true);
         }else if (this.cursors.right.isDown){
+            if(!this.audWalk.isPlaying && this.player.body.touching.down) this.audWalk.play();
             this.player.setVelocityX(200);
             this.player.anims.play('right', true);
         }else{
+            this.audWalk.stop();
             this.player.setVelocityX(0);
             this.player.anims.play('turn');
         }
 
         if (this.cursors.up.isDown && this.player.body.touching.down){
+            this.audJump.play();
             this.player.setVelocityY(-750);
         }
 
+    }
+
+    createAudio(){
+        this.audEndGame = this.sound.add('aud_end_game');
+        this.audJump = this.sound.add('aud_jump');
+        this.audWalk = this.sound.add('aud_walk');
     }
 
     createDoors(){
@@ -144,6 +161,7 @@ export class GameScene extends Phaser.Scene {
     }
 
     handleCollisionEnemy(event, collider) {
+        this.audEndGame.play();
         this.scene.start('EndScene');
     }
 

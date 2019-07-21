@@ -19,6 +19,9 @@ export class IntroScene extends Phaser.Scene {
             'assets/images/intro_splash_beta.png',
             { frameWidth: 207, frameHeight: 436 }
         );
+
+        this.load.audio('aud_start_game', 'assets/audio/start_game.wav');
+        this.load.audio('aud_select', 'assets/audio/intro_select.mp3');
     }
 
     create() {
@@ -43,6 +46,9 @@ export class IntroScene extends Phaser.Scene {
             frames: [ { key: 'intro_beta', frame: 1 } ],
             frameRate: 20
         });
+
+        this.audStartGame = this.sound.add('aud_start_game');
+        this.audSelect = this.sound.add('aud_select');
 
         // Add the background image
         this.bkg = this.add.image(400, 300, 'intro_bkg').setAlpha(0);
@@ -92,16 +98,20 @@ export class IntroScene extends Phaser.Scene {
         this.beta.setInteractive();
         
         this.alpha.on('pointerdown', () => { 
+            this.audStartGame.play();
             localStorage.setItem("character", "alpha");
             this.scene.start('Level1');
         });
 
         this.beta.on('pointerdown', () => { 
+            this.audStartGame.play();
             localStorage.setItem("character", "beta");
             this.scene.start('Level1');
+            
         });
 
         this.alpha.on('pointerover', () => { 
+            this.audSelect.play();
             this.selector.bringToTop(this.alpha);
             this.alpha.anims.play('alpha_hilite');
         }, this);
@@ -111,6 +121,7 @@ export class IntroScene extends Phaser.Scene {
         }, this);
 
         this.beta.on('pointerover', () => { 
+            this.audSelect.play();
             this.selector.bringToTop(this.beta);
             this.beta.anims.play('beta_hilite');
         }, this);
