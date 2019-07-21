@@ -38,9 +38,10 @@ const gameConfig = {
         }
     },
     scene: [
+        IntroScene,
         Level1,
         Level2,
-        IntroScene,
+        
         EndScene
     ]
 };
