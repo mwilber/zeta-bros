@@ -13,9 +13,13 @@ export class GameScene extends Phaser.Scene {
         this.load.image('ground', 'assets/images/ground.png');
         this.load.image('wall', 'assets/images/wall.png');
         this.load.image('platform', 'assets/images/platform.png');
-        this.load.spritesheet('zeta', 
-            'assets/images/zeta_spritesheet_'+localStorage.getItem("character")+'.png',
-            { frameWidth: 40, frameHeight: (localStorage.getItem("character")==='alpha')?66:60 }
+        this.load.spritesheet('zeta_alpha', 
+            'assets/images/zeta_spritesheet_alpha.png',
+            { frameWidth: 40, frameHeight: 66 }
+        );
+        this.load.spritesheet('zeta_beta', 
+            'assets/images/zeta_spritesheet_beta.png',
+            { frameWidth: 40, frameHeight: 60 }
         );
         this.load.spritesheet('door', 
             'assets/images/door.png',
@@ -25,6 +29,9 @@ export class GameScene extends Phaser.Scene {
     }
 
     create() {
+
+        this.charactername = 'zeta_'+localStorage.getItem("character");
+        console.log('creating character', this.charactername);
         
         this.unlockCt = 0;
 
@@ -107,7 +114,8 @@ export class GameScene extends Phaser.Scene {
     }
 
     createPlayer() {
-        let player = this.physics.add.sprite(100, 450, 'zeta');
+        console.log('creating player', this.charactername);
+        let player = this.physics.add.sprite(100, 450, this.charactername);
 
         player.setMass(1700);
         player.setBounce(0.2);
@@ -147,22 +155,28 @@ export class GameScene extends Phaser.Scene {
     }
 
     initAnimation() {
+
+        // Clear out the zeta anims to allow for character change
+        this.anims.remove('left');
+        this.anims.remove('turn');
+        this.anims.remove('right');
+
         this.anims.create({
             key: 'left',
-            frames: this.anims.generateFrameNumbers('zeta', { start: 0, end: 3 }),
+            frames: this.anims.generateFrameNumbers(this.charactername, { start: 0, end: 3 }),
             frameRate: 20,
             repeat: -1
         });
 
         this.anims.create({
             key: 'turn',
-            frames: [ { key: 'zeta', frame: 4 } ],
+            frames: [ { key: this.charactername, frame: 4 } ],
             frameRate: 20
         });
 
         this.anims.create({
             key: 'right',
-            frames: this.anims.generateFrameNumbers('zeta', { start: 5, end: 8 }),
+            frames: this.anims.generateFrameNumbers(this.charactername, { start: 5, end: 8 }),
             frameRate: 20,
             repeat: -1
         });

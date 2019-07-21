@@ -20,7 +20,7 @@ export class IntroScene extends Phaser.Scene {
         this.bkg = this.add.image(400, 300, 'intro_bkg').setAlpha(0);
         this.title = this.add.image(400, -300, 'intro_title');
         this.alpha = this.add.image(1200, 300, 'intro_alpha');
-        this.beta = this.add.image(-400, 300, 'intro_beta');
+        this.beta = this.add.image(-204, 300, 'intro_beta');
 
         var timeline = this.tweens.createTimeline();
         timeline.add({
@@ -37,7 +37,7 @@ export class IntroScene extends Phaser.Scene {
         });
         timeline.add({
             targets: this.beta,
-            x: 400,
+            x: 204,
             ease: 'Power1',
             duration: 250
         });
