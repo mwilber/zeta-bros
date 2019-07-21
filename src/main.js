@@ -46,4 +46,7 @@ const gameConfig = {
     ]
 };
 
+// Set up character selection in local storage
+localStorage.setItem("character", "alpha");
+
 new Phaser.Game(gameConfig);

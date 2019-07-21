@@ -50,9 +50,16 @@ export class IntroScene extends Phaser.Scene {
 
         timeline.play();
         
-        // this.splash.setInteractive().on('pointerdown', () => { 
-        //     console.log('start game'); 
-        //     this.scene.start('Level1');
-        // });
+        this.alpha.setInteractive().on('pointerdown', () => { 
+            console.log('start game as alpha'); 
+            localStorage.setItem("character", "alpha");
+            this.scene.start('Level1');
+        });
+
+        this.beta.setInteractive().on('pointerdown', () => { 
+            console.log('start game as beta'); 
+            localStorage.setItem("character", "beta");
+            this.scene.start('Level1');
+        });
     }
 }

@@ -6,10 +6,6 @@ export class GameScene extends Phaser.Scene {
 		super(config);
 
         this.levelCt = 1;
-        this.character = {
-            name: 'beta',
-            height: 60
-        };
 	}
 
 	preload() {
@@ -18,8 +14,8 @@ export class GameScene extends Phaser.Scene {
         this.load.image('wall', 'assets/images/wall.png');
         this.load.image('platform', 'assets/images/platform.png');
         this.load.spritesheet('zeta', 
-            'assets/images/zeta_spritesheet_'+this.character.name+'.png',
-            { frameWidth: 40, frameHeight: this.character.height }
+            'assets/images/zeta_spritesheet_'+localStorage.getItem("character")+'.png',
+            { frameWidth: 40, frameHeight: (localStorage.getItem("character")==='alpha')?66:60 }
         );
         this.load.spritesheet('door', 
             'assets/images/door.png',
