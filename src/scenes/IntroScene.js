@@ -11,12 +11,14 @@ export class IntroScene extends Phaser.Scene {
 	preload() {
         this.load.image('splash', 'assets/images/intro_splash.png');
         this.load.audio('aud_start_game', 'assets/audio/start_game.wav');
+        this.load.audio('aud_select', 'assets/audio/intro_select.mp3');
     }
 
     create() {
         // Add the background image
         this.splash = this.add.image(400, 300, 'splash');
         this.audStartGame = this.sound.add('aud_start_game');
+        this.audSelect = this.sound.add('aud_select');
 
         
         
