@@ -15,7 +15,7 @@ export class GameScene extends Phaser.Scene {
         this.load.image('platform', 'assets/images/platform.png');
         this.load.spritesheet('zeta', 
             'assets/images/zeta_spritesheet.png',
-            { frameWidth: 40, frameHeight: 60 }
+            { frameWidth: 40, frameHeight: 66 }
         );
         this.load.spritesheet('door', 
             'assets/images/door.png',
