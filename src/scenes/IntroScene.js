@@ -26,40 +26,52 @@ export class IntroScene extends Phaser.Scene {
         timeline.add({
             targets: this.bkg,
             alpha: 1,
-            ease: 'Power1',
-            duration: 2000
+            ease: 'QuadraticOut',
+            duration: 1000,
+            delay: 0
         });
         timeline.add({
-            targets: this.alpha,
+            targets: [this.alpha],
             x: 400,
-            ease: 'Power1',
-            duration: 250
+            ease: 'QuadraticOut',
+            duration: 250,
+            delay: 0
         });
         timeline.add({
             targets: this.beta,
             x: 204,
-            ease: 'Power1',
-            duration: 250
+            ease: 'QuadraticOut',
+            duration: 250,
+            delay: 0
         });
         timeline.add({
             targets: this.title,
             y: 300,
-            ease: 'Power1',
-            duration: 1000
+            ease: 'Bounce.easeOut',
+            duration: 1000,
+            delay: 0
         });
 
         timeline.play();
         
         this.alpha.setInteractive().on('pointerdown', () => { 
-            console.log('start game as alpha'); 
             localStorage.setItem("character", "alpha");
             this.scene.start('Level1');
         });
 
         this.beta.setInteractive().on('pointerdown', () => { 
-            console.log('start game as beta'); 
             localStorage.setItem("character", "beta");
             this.scene.start('Level1');
+        });
+
+        this.alpha.setInteractive().on('pointerover', () => { 
+            this.beta.setAlpha(0.5);
+            this.alpha.setAlpha(1);
+        });
+
+        this.beta.setInteractive().on('pointerover', () => { 
+            this.alpha.setAlpha(0.5);
+            this.beta.setAlpha(1);
         });
     }
 }
