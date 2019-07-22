@@ -20,7 +20,10 @@ export class IntroScene extends Phaser.Scene {
             { frameWidth: 207, frameHeight: 436 }
         );
 
-        this.load.audio('aud_start_game', 'assets/audio/start_game.wav');
+        this.load.audio('aud_intro_jingle', 'assets/audio/intro_jingle.mp3');
+        this.load.audio('aud_intro_start', 'assets/audio/intro_start.mp3');
+        this.load.audio('aud_intro_title', 'assets/audio/intro_title.wav');
+        this.load.audio('aud_intro_wooshhit', 'assets/audio/intro_woosh_hit.mp3');
         this.load.audio('aud_select', 'assets/audio/intro_select.mp3');
     }
 
@@ -47,8 +50,11 @@ export class IntroScene extends Phaser.Scene {
             frameRate: 20
         });
 
-        this.audStartGame = this.sound.add('aud_start_game');
+        this.audJingle = this.sound.add('aud_intro_jingle');
+        this.audStartGame = this.sound.add('aud_intro_start');
         this.audSelect = this.sound.add('aud_select');
+        this.audTitle = this.sound.add('aud_intro_title');
+        this.audWooshHit = this.sound.add('aud_intro_wooshhit');
 
         // Add the background image
         this.bkg = this.add.image(400, 300, 'intro_bkg').setAlpha(0);
@@ -67,14 +73,16 @@ export class IntroScene extends Phaser.Scene {
             alpha: 1,
             ease: 'QuadraticOut',
             duration: 1000,
-            delay: 0
+            delay: 0,
+            onStart: ()=>{this.audJingle.play()}
         });
         timeline.add({
             targets: [this.alpha],
             x: 488,
             ease: 'QuadraticIn',
             duration: 250,
-            delay: 0
+            delay: 0,
+            onStart: ()=>{this.audWooshHit.play()}
         });
         timelineb.add({
             targets: this.beta,
@@ -88,7 +96,8 @@ export class IntroScene extends Phaser.Scene {
             y: 300,
             ease: 'Bounce.easeOut',
             duration: 1000,
-            delay: 0
+            delay: 0,
+            onStart: ()=>{/*this.audTitle.play()*/}
         });
 
         timeline.play();
