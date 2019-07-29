@@ -5,16 +5,16 @@ export class GameScene extends Phaser.Scene {
     constructor(config) {
 		super(config);
 
-        this.levelCt = 1;
         this.character = {
             name: 'beta',
             height: 60
         };
-        this.botResetTime = config.botResetTime || 10000;
-        this.botSpeed = config.botSpeed || 100;
-        this.botSpawnCount = config.botCount || 2;
-        this.botSpawnRate = config.botSpawnRate || 5000;
-        this.botKillCount = 0;
+
+        this.levelCt = 1;
+        this.botResetTime = 10000;
+        this.botSpeed = 100;
+        this.botSpawnCount = 2;
+        this.botSpawnRate = 5000;
 	}
 
 	preload() {
@@ -38,8 +38,8 @@ export class GameScene extends Phaser.Scene {
     }
 
     create() {
-        
-        this.unlockCt = 0;
+
+        this.botKillCount = 0;
 
         // Add the background image
         this.add.image(400, 300, 'background');
@@ -214,7 +214,11 @@ export class GameScene extends Phaser.Scene {
         for( let bot of this.bots.getChildren() ){
             bot.setVelocity(0,0).setActive(false);
         }
-        window.setTimeout(this.enableBots.bind(this), this.botResetTime);
+        this.time.addEvent({
+            delay: this.botResetTime,
+            callback: this.enableBots,
+            callbackScope: this
+        });
     }
 
     enableBots(){

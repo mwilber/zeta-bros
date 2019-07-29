@@ -3,14 +3,14 @@ import { GameScene } from '../scenes/GameScene';
 export class Level1 extends GameScene{
     constructor() {
 		super({
-            key: 'Level1',
-            botResetTime: 10000,
-            botSpeed: 100,
-            botSpawnCount: 2,
-            botSpawnRate: 5000
+            key: 'Level1'
         });
 
         this.levelCt = 1;
+        this.botResetTime = 10000;
+        this.botSpeed = 100;
+        this.botSpawnCount = 2;
+        this.botSpawnRate = 5000;
 	}
 
     createPlatforms() {
@@ -26,6 +26,15 @@ export class Level1 extends GameScene{
         platforms.create(750, 405, 'platform');
 
         return platforms;
+    }
+
+    createSwitches(){
+        let switches = this.physics.add.staticGroup();
+
+        let botSwitch = switches.create(75, 75, 'switch');
+        botSwitch.anims.play('switchOn');
+
+        return switches;
     }
     
 }
