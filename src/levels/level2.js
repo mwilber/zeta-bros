@@ -3,11 +3,14 @@ import { GameScene } from '../scenes/GameScene';
 export class Level2 extends GameScene{
     constructor() {
 		super({
-			key: 'Level2'
+            key: 'Level2',
+            botResetTime: 10000,
+            botSpeed: 200,
+            botSpawnCount: 4,
+            botSpawnRate: 2500
         });
 
         this.levelCt = 2;
-
 	}
 
     createPlatforms() {
