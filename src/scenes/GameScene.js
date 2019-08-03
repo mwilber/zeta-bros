@@ -50,6 +50,8 @@ export class GameScene extends Phaser.Scene {
 
     create() {
 
+        this.charactername = 'zeta_'+localStorage.getItem("character");
+
         this.botKillCount = 0;
 
         // Add the background image
