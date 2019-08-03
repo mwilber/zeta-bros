@@ -128,8 +128,8 @@ export class GameScene extends Phaser.Scene {
     }
 
     createDoorSign(){
-        this.add.text(380, 410, 'LEVEL', { fontSize: '12px', fill: '#ff0000', align: 'center', fontFamily: 'sans-serif' });
-        return this.add.text(385, 420, '0', { fontSize: '48px', fill: '#ff0000', align: 'center', fontFamily: 'sans-serif' });
+        this.add.text(380, 410, 'LEVEL', { fontSize: '12px', fill: '#cccc66', align: 'center', fontFamily: 'sans-serif' });
+        return this.add.text(385, 420, '0', { fontSize: '48px', fill: '#cccc66', align: 'center', fontFamily: 'sans-serif' });
     }
 
     createPlatforms() {
