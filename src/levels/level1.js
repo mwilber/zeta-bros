@@ -33,6 +33,8 @@ export class Level1 extends GameScene{
 
         let botSwitch = switches.create(75, 75, 'switch');
         botSwitch.anims.play('switchOn');
+        botSwitch = switches.create(750, 75, 'switch');
+        botSwitch.anims.play('switchOn');
 
         return switches;
     }

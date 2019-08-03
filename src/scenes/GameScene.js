@@ -209,8 +209,7 @@ export class GameScene extends Phaser.Scene {
         // Default to right side
         let position = 700;
         let velocity = -this.botSpeed;
-        //if(side === 'left'){
-        if(false){
+        if(side === 'left'){
             position = 100;
             velocity = this.botSpeed;
         }
