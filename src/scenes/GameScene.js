@@ -34,7 +34,10 @@ export class GameScene extends Phaser.Scene {
             'assets/images/switch.png',
             { frameWidth: 8, frameHeight: 16 }
         );
-        this.load.image('bot', 'assets/images/security_bot.png');
+        this.load.spritesheet('bot', 
+            'assets/images/protector_spritesheet.png',
+            { frameWidth: 50, frameHeight: 50 }
+        );
     }
 
     create() {
@@ -148,10 +151,9 @@ export class GameScene extends Phaser.Scene {
     createPlayer() {
         let player = this.physics.add.sprite(400, 450, 'zeta');
 
-        player.setMass(1700);
         player.setBounce(0.2);
         player.setCollideWorldBounds(true);
-
+        
         return player;
     }
 
@@ -164,21 +166,25 @@ export class GameScene extends Phaser.Scene {
         return walls;
     }
 
-    handleCollisionWall(event, collider){
-        if(collider.body.touching.left){
-            event.setVelocityX(-100);
-        }else if(collider.body.touching.right){
-            event.setVelocityX(100);
+    handleCollisionWall(bot, wall){
+        if(wall.body.touching.left){
+            bot.setVelocityX(-100);
+            bot.anims.play('botLeft');
+        }else if(wall.body.touching.right){
+            bot.setVelocityX(100);
+            bot.anims.play('botRight');
         }
 
         return true;
     }
 
-    handleCollisionEnemy(event, collider) {
-        if(collider.active){
+    handleCollisionEnemy(player, bot) {
+        if(bot.active){
             this.scene.start('EndScene');
         }else{
-            collider.destroy();
+            let tmpbot = this.physics.add.staticSprite(bot.x, bot.y, 'bot');
+            tmpbot.anims.play('botAsplode');
+            bot.destroy();
             this.botKillCount++;
         }
     }
@@ -203,11 +209,17 @@ export class GameScene extends Phaser.Scene {
         // Default to right side
         let position = 700;
         let velocity = -this.botSpeed;
-        if(side === 'left'){
+        //if(side === 'left'){
+        if(false){
             position = 100;
             velocity = this.botSpeed;
         }
-        this.bots.create(position, 75, 'bot').setVelocityX(velocity);
+        let tmpbot = this.bots.create(position, 75, 'bot').setVelocityX(velocity);
+        if(velocity < 0){
+            tmpbot.anims.play('botLeft');
+        }else{
+            tmpbot.anims.play('botRight');
+        }
     }
 
     disableBots(){
@@ -228,6 +240,7 @@ export class GameScene extends Phaser.Scene {
         }
         for( let bot of this.bots.getChildren() ){
             bot.setVelocityX(this.botSpeed).setActive(true);
+            bot.anims.play('botRight');
         }
     }
 
@@ -268,6 +281,26 @@ export class GameScene extends Phaser.Scene {
             key: 'switchOff',
             frames: [ { key: 'switch', frame: 0 } ],
             frameRate: 20,
+        });
+
+        this.anims.create({
+            key: 'botLeft',
+            frames: this.anims.generateFrameNumbers('bot', { start: 0, end: 1 }),
+            frameRate: 5,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'botRight',
+            frames: this.anims.generateFrameNumbers('bot', { start: 2, end: 3 }),
+            frameRate: 5,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'botAsplode',
+            frames: this.anims.generateFrameNumbers('bot', { start: 4, end: 9 }),
+            frameRate: 15
         });
     }
     
