@@ -30,6 +30,9 @@ export class GameScene extends Phaser.Scene {
 
         this.platforms      = this.createPlatforms();
         this.player         = this.createPlayer();
+
+        // Set up physics colliders
+        this.physics.add.collider(this.player, this.platforms);
     }
 
     update() {
