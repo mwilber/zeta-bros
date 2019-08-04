@@ -19,10 +19,25 @@ export class GameScene extends Phaser.Scene {
         // Add the background image
         this.add.image(400, 300, 'background');
 
+        // Add a game controller with devault arrow keys
+        this.cursors = this.input.keyboard.createCursorKeys();
+
         this.player         = this.createPlayer();
     }
 
     update() {
+
+        if (this.cursors.left.isDown){
+            this.player.setVelocityX(-200);
+        }else if (this.cursors.right.isDown){
+            this.player.setVelocityX(200);
+        }else{
+            this.player.setVelocityX(0);
+        }
+
+        if (this.cursors.up.isDown && this.player.body.touching.down){
+            this.player.setVelocityY(-750);
+        }
 
     }
 
