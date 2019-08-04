@@ -156,7 +156,7 @@ export class GameScene extends Phaser.Scene {
 
     handleCollisionEnemy(player, bot) {
         if(bot.active){
-            this.scene.restart();
+            this.scene.start('EndScene');
         }else{
             let tmpbot = this.physics.add.staticSprite(bot.x, bot.y, 'bot');
             tmpbot.anims.play('botAsplode');
