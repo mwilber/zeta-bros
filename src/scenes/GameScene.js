@@ -1,10 +1,8 @@
 import Phaser from 'phaser';
 
 export class GameScene extends Phaser.Scene {
-    constructor() {
-		super({
-            key: 'GameScene'
-        });
+    constructor(config) {
+		super(config);
 
         this.character = {
             name: 'alpha',
@@ -135,13 +133,13 @@ export class GameScene extends Phaser.Scene {
     createPlatforms() {
         let platforms = this.physics.add.staticGroup();
 
-        platforms.create(100, 135, 'platform');
-        platforms.create(700, 135, 'platform');
+        // platforms.create(100, 135, 'platform');
+        // platforms.create(700, 135, 'platform');
         
-        platforms.create(400, 270, 'platform');
+        // platforms.create(400, 270, 'platform');
 
-        platforms.create(50, 405, 'platform');
-        platforms.create(750, 405, 'platform');
+        // platforms.create(50, 405, 'platform');
+        // platforms.create(750, 405, 'platform');
 
         platforms.create(400, 572, 'ground');
 
