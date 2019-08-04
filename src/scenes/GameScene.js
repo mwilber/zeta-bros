@@ -195,10 +195,10 @@ export class GameScene extends Phaser.Scene {
         }
     }
 
-    handleOverlapSwitch(player, switch) {
-        if(switch.active){
-            switch.setActive(false);
-            switch.anims.play('switchOff');
+    handleOverlapSwitch(player, botswitch) {
+        if(botswitch.active){
+            botswitch.setActive(false);
+            botswitch.anims.play('switchOff');
             this.disableBots();
         }
     }
