@@ -19,6 +19,9 @@ export class GameScene extends Phaser.Scene {
         // Add the background image
         this.add.image(400, 300, 'background');
 
+        // Set up sprite animations
+        this.initAnimation();
+
         // Add a game controller with devault arrow keys
         this.cursors = this.input.keyboard.createCursorKeys();
 
@@ -29,10 +32,13 @@ export class GameScene extends Phaser.Scene {
 
         if (this.cursors.left.isDown){
             this.player.setVelocityX(-200);
+            this.player.anims.play('left', true);
         }else if (this.cursors.right.isDown){
             this.player.setVelocityX(200);
+            this.player.anims.play('right', true);
         }else{
             this.player.setVelocityX(0);
+            this.player.anims.play('turn');
         }
 
         if (this.cursors.up.isDown && this.player.body.touching.down){
@@ -48,6 +54,29 @@ export class GameScene extends Phaser.Scene {
         player.setCollideWorldBounds(true);
         
         return player;
+    }
+
+    initAnimation() {
+        this.anims.create({
+            key: 'left',
+            frames: this.anims.generateFrameNumbers('zeta', { start: 0, end: 3 }),
+            frameRate: 20,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'turn',
+            frames: [ { key: 'zeta', frame: 4 } ],
+            frameRate: 20
+        });
+
+        this.anims.create({
+            key: 'right',
+            frames: this.anims.generateFrameNumbers('zeta', { start: 5, end: 8 }),
+            frameRate: 20,
+            repeat: -1
+        });
+
     }
     
 }
