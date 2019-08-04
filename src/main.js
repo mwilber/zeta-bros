@@ -18,6 +18,7 @@ import '../styles/main.scss';
 
 import 'phaser';
 import { GameScene } from './scenes/GameScene';
+import { EndScene } from './scenes/EndScene';
 
 const gameConfig = {
     type: Phaser.AUTO,
@@ -35,7 +36,8 @@ const gameConfig = {
         }
     },
     scene: [
-        GameScene
+        GameScene,
+        EndScene
     ]
 };
 

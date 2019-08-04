@@ -115,7 +115,7 @@ export class GameScene extends Phaser.Scene {
     }
 
     handleCollisionEnemy(player, bot) {
-        this.scene.restart();
+        this.scene.start('EndScene');
     }
 
     spawnBot(side){
