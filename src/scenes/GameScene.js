@@ -9,6 +9,9 @@ export class GameScene extends Phaser.Scene {
 
 	preload() {
         this.load.image('background', 'assets/images/background.png');
+        this.load.image('ground', 'assets/images/ground.png');
+        this.load.image('wall', 'assets/images/wall.png');
+        this.load.image('platform', 'assets/images/platform.png');
         this.load.spritesheet('zeta', 
             'assets/images/zeta_spritesheet_alpha.png',
             { frameWidth: 40, frameHeight: 66 }
@@ -25,6 +28,7 @@ export class GameScene extends Phaser.Scene {
         // Add a game controller with devault arrow keys
         this.cursors = this.input.keyboard.createCursorKeys();
 
+        this.platforms      = this.createPlatforms();
         this.player         = this.createPlayer();
     }
 
@@ -45,6 +49,22 @@ export class GameScene extends Phaser.Scene {
             this.player.setVelocityY(-750);
         }
 
+    }
+
+    createPlatforms() {
+        let platforms = this.physics.add.staticGroup();
+
+        platforms.create(100, 135, 'platform');
+        platforms.create(700, 135, 'platform');
+        
+        platforms.create(400, 270, 'platform');
+
+        platforms.create(50, 405, 'platform');
+        platforms.create(750, 405, 'platform');
+
+        platforms.create(400, 572, 'ground');
+
+        return platforms;
     }
 
     createPlayer() {
