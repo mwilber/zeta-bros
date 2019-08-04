@@ -6,7 +6,9 @@ export class GameScene extends Phaser.Scene {
             key: 'GameScene'
         });
 
+        this.botResetTime = 10000;
         this.botSpeed = 100;
+        this.botSpawnCount = 1;
 	}
 
 	preload() {
@@ -18,6 +20,14 @@ export class GameScene extends Phaser.Scene {
             'assets/images/zeta_spritesheet_alpha.png',
             { frameWidth: 40, frameHeight: 66 }
         );
+        this.load.spritesheet('door', 
+            'assets/images/door.png',
+            { frameWidth: 64, frameHeight: 64 }
+        );
+        this.load.spritesheet('switch', 
+            'assets/images/switch.png',
+            { frameWidth: 8, frameHeight: 16 }
+        );
         this.load.spritesheet('bot', 
             'assets/images/protector_spritesheet.png',
             { frameWidth: 50, frameHeight: 50 }
@@ -25,6 +35,8 @@ export class GameScene extends Phaser.Scene {
     }
 
     create() {
+        this.botKillCount = 0;
+
         // Add the background image
         this.add.image(400, 300, 'background');
 
@@ -34,8 +46,11 @@ export class GameScene extends Phaser.Scene {
         // Add a game controller with devault arrow keys
         this.cursors = this.input.keyboard.createCursorKeys();
 
+        // Set up all the game objects
+        this.door           = this.createDoor();
         this.platforms      = this.createPlatforms();
         this.walls          = this.createWalls();
+        this.switches       = this.createSwitches();
         this.player         = this.createPlayer();
         //Create an empty group for the security bots
         this.bots = this.physics.add.group();
@@ -45,6 +60,8 @@ export class GameScene extends Phaser.Scene {
         this.physics.add.collider(this.bots, this.platforms);
         this.physics.add.collider(this.bots, this.walls, this.handleCollisionWall.bind(this));
         this.physics.add.collider(this.player, this.bots, this.handleCollisionEnemy.bind(this));
+        this.physics.add.overlap(this.player, this.door, this.handleOverlapDoor.bind(this));
+        this.physics.add.overlap(this.player, this.switches, this.handleOverlapSwitch.bind(this));
 
         this.spawnBot();
     }
@@ -66,6 +83,29 @@ export class GameScene extends Phaser.Scene {
             this.player.setVelocityY(-750);
         }
 
+        if( this.botKillCount >= this.botSpawnCount ){
+            // All bots destroyed
+            this.botKillCount = 0;
+            this.door.setActive(true);
+            this.door.anims.play('doorOpen');
+        }
+
+    }
+
+    createSwitches(){
+        let switches = this.physics.add.staticGroup();
+
+        let botSwitch = switches.create(75, 500, 'switch');
+        botSwitch.anims.play('switchOn');
+
+        return switches;
+    }
+
+    createDoor(){
+        let door = this.physics.add.staticSprite(400, 508, 'door', 0);
+        // Entry door is inactive
+        door.setActive(false);
+        return door;
     }
 
     createPlatforms() {
@@ -115,7 +155,29 @@ export class GameScene extends Phaser.Scene {
     }
 
     handleCollisionEnemy(player, bot) {
-        this.scene.restart();
+        if(bot.active){
+            this.scene.restart();
+        }else{
+            let tmpbot = this.physics.add.staticSprite(bot.x, bot.y, 'bot');
+            tmpbot.anims.play('botAsplode');
+            bot.destroy();
+            this.botKillCount++;
+        }
+    }
+
+    handleOverlapDoor(player, door) {
+        if(door.active){
+            // Load the next scene
+            this.scene.start(this.scene.manager.getAt(this.scene.getIndex()+1));
+        }
+    }
+
+    handleOverlapSwitch(player, botswitch) {
+        if(botswitch.active){
+            botswitch.setActive(false);
+            botswitch.anims.play('switchOff');
+            this.disableBots();
+        }
     }
 
     spawnBot(side){
@@ -131,6 +193,28 @@ export class GameScene extends Phaser.Scene {
             tmpbot.anims.play('botLeft');
         }else{
             tmpbot.anims.play('botRight');
+        }
+    }
+
+    disableBots(){
+        for( let bot of this.bots.getChildren() ){
+            bot.setVelocity(0,0).setActive(false);
+        }
+        this.time.addEvent({
+            delay: this.botResetTime,
+            callback: this.enableBots,
+            callbackScope: this
+        });
+    }
+
+    enableBots(){
+        for( let botSwitch of this.switches.getChildren() ){
+            botSwitch.anims.play('switchOn');
+            botSwitch.setActive(true);
+        }
+        for( let bot of this.bots.getChildren() ){
+            bot.setVelocityX(this.botSpeed).setActive(true);
+            bot.anims.play('botRight');
         }
     }
 
@@ -154,6 +238,25 @@ export class GameScene extends Phaser.Scene {
             frameRate: 20,
             repeat: -1
         });
+
+        this.anims.create({
+            key: 'doorOpen',
+            frames: this.anims.generateFrameNumbers('door', { start: 1, end: 3 }),
+            frameRate: 10
+        });
+
+        this.anims.create({
+            key: 'switchOn',
+            frames: [ { key: 'switch', frame: 1 } ],
+            frameRate: 20,
+        });
+
+        this.anims.create({
+            key: 'switchOff',
+            frames: [ { key: 'switch', frame: 0 } ],
+            frameRate: 20,
+        });
+
         this.anims.create({
             key: 'botLeft',
             frames: this.anims.generateFrameNumbers('bot', { start: 0, end: 1 }),
