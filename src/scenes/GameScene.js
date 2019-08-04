@@ -44,6 +44,7 @@ export class GameScene extends Phaser.Scene {
         this.physics.add.collider(this.player, this.platforms);
         this.physics.add.collider(this.bots, this.platforms);
         this.physics.add.collider(this.bots, this.walls, this.handleCollisionWall.bind(this));
+        this.physics.add.collider(this.player, this.bots, this.handleCollisionEnemy.bind(this));
 
         this.spawnBot();
     }
@@ -111,6 +112,10 @@ export class GameScene extends Phaser.Scene {
         }
 
         return true;
+    }
+
+    handleCollisionEnemy(player, bot) {
+        this.scene.restart();
     }
 
     spawnBot(side){
