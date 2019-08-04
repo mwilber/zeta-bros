@@ -35,6 +35,7 @@ export class GameScene extends Phaser.Scene {
         this.cursors = this.input.keyboard.createCursorKeys();
 
         this.platforms      = this.createPlatforms();
+        this.walls          = this.createWalls();
         this.player         = this.createPlayer();
         //Create an empty group for the security bots
         this.bots = this.physics.add.group();
@@ -42,6 +43,7 @@ export class GameScene extends Phaser.Scene {
         // Set up physics colliders
         this.physics.add.collider(this.player, this.platforms);
         this.physics.add.collider(this.bots, this.platforms);
+        this.physics.add.collider(this.bots, this.walls, this.handleCollisionWall.bind(this));
 
         this.spawnBot();
     }
@@ -88,6 +90,27 @@ export class GameScene extends Phaser.Scene {
         player.setCollideWorldBounds(true);
         
         return player;
+    }
+
+    createWalls() {
+        let walls = this.physics.add.staticGroup();
+
+        walls.create(0, 300, 'wall').setActive(true);
+        walls.create(800, 300, 'wall').setActive(true);
+
+        return walls;
+    }
+
+    handleCollisionWall(bot, wall){
+        if(wall.body.touching.left){
+            bot.setVelocityX(-100);
+            bot.anims.play('botLeft');
+        }else if(wall.body.touching.right){
+            bot.setVelocityX(100);
+            bot.anims.play('botRight');
+        }
+
+        return true;
     }
 
     spawnBot(side){
