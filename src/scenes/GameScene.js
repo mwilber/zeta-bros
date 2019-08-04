@@ -5,6 +5,8 @@ export class GameScene extends Phaser.Scene {
 		super({
             key: 'GameScene'
         });
+
+        this.botSpeed = 100;
 	}
 
 	preload() {
@@ -15,6 +17,10 @@ export class GameScene extends Phaser.Scene {
         this.load.spritesheet('zeta', 
             'assets/images/zeta_spritesheet_alpha.png',
             { frameWidth: 40, frameHeight: 66 }
+        );
+        this.load.spritesheet('bot', 
+            'assets/images/protector_spritesheet.png',
+            { frameWidth: 50, frameHeight: 50 }
         );
     }
 
@@ -30,6 +36,14 @@ export class GameScene extends Phaser.Scene {
 
         this.platforms      = this.createPlatforms();
         this.player         = this.createPlayer();
+        //Create an empty group for the security bots
+        this.bots = this.physics.add.group();
+
+        // Set up physics colliders
+        this.physics.add.collider(this.player, this.platforms);
+        this.physics.add.collider(this.bots, this.platforms);
+
+        this.spawnBot();
     }
 
     update() {
@@ -76,6 +90,22 @@ export class GameScene extends Phaser.Scene {
         return player;
     }
 
+    spawnBot(side){
+        // Default to right side
+        let position = 700;
+        let velocity = -this.botSpeed;
+        if(side === 'left'){
+            position = 100;
+            velocity = this.botSpeed;
+        }
+        let tmpbot = this.bots.create(position, 75, 'bot').setVelocityX(velocity);
+        if(velocity < 0){
+            tmpbot.anims.play('botLeft');
+        }else{
+            tmpbot.anims.play('botRight');
+        }
+    }
+
     initAnimation() {
         this.anims.create({
             key: 'left',
@@ -96,7 +126,25 @@ export class GameScene extends Phaser.Scene {
             frameRate: 20,
             repeat: -1
         });
+        this.anims.create({
+            key: 'botLeft',
+            frames: this.anims.generateFrameNumbers('bot', { start: 0, end: 1 }),
+            frameRate: 5,
+            repeat: -1
+        });
 
+        this.anims.create({
+            key: 'botRight',
+            frames: this.anims.generateFrameNumbers('bot', { start: 2, end: 3 }),
+            frameRate: 5,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'botAsplode',
+            frames: this.anims.generateFrameNumbers('bot', { start: 4, end: 9 }),
+            frameRate: 15
+        });
     }
     
 }
