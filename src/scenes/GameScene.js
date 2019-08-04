@@ -6,9 +6,16 @@ export class GameScene extends Phaser.Scene {
             key: 'GameScene'
         });
 
+        this.character = {
+            name: 'alpha',
+            height: 60
+        };
+
+        this.levelCt = 1;
         this.botResetTime = 10000;
         this.botSpeed = 100;
-        this.botSpawnCount = 1;
+        this.botSpawnCount = 2;
+        this.botSpawnRate = 5000;
 	}
 
 	preload() {
@@ -48,6 +55,7 @@ export class GameScene extends Phaser.Scene {
 
         // Set up all the game objects
         this.door           = this.createDoor();
+        this.doorsign       = this.createDoorSign();
         this.platforms      = this.createPlatforms();
         this.walls          = this.createWalls();
         this.switches       = this.createSwitches();
@@ -63,7 +71,18 @@ export class GameScene extends Phaser.Scene {
         this.physics.add.overlap(this.player, this.door, this.handleOverlapDoor.bind(this));
         this.physics.add.overlap(this.player, this.switches, this.handleOverlapSwitch.bind(this));
 
-        this.spawnBot();
+        // Set the level indicator
+        this.doorsign.setText(this.levelCt);
+
+        // Let the bots loose
+        this.time.addEvent({
+            delay: this.botSpawnRate,
+            callback: (event)=>{
+                this.spawnBot((Math.random()>0.5)?'left':'right');
+            },
+            callbackScope: this,
+            repeat: this.botSpawnCount-1
+        });
     }
 
     update() {
@@ -106,6 +125,11 @@ export class GameScene extends Phaser.Scene {
         // Entry door is inactive
         door.setActive(false);
         return door;
+    }
+
+    createDoorSign(){
+        this.add.text(380, 410, 'LEVEL', { fontSize: '12px', fill: '#cccc66', align: 'center', fontFamily: 'sans-serif' });
+        return this.add.text(385, 420, '0', { fontSize: '48px', fill: '#cccc66', align: 'center', fontFamily: 'sans-serif' });
     }
 
     createPlatforms() {
