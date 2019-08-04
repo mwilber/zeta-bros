@@ -1,4 +1,3 @@
-
 import Phaser from 'phaser';
 
 export class GameScene extends Phaser.Scene {
@@ -128,8 +127,8 @@ export class GameScene extends Phaser.Scene {
     }
 
     createDoorSign(){
-        this.add.text(380, 410, 'LEVEL', { fontSize: '12px', fill: '#ff0000', align: 'center', fontFamily: 'sans-serif' });
-        return this.add.text(385, 420, '0', { fontSize: '48px', fill: '#ff0000', align: 'center', fontFamily: 'sans-serif' });
+        this.add.text(380, 410, 'LEVEL', { fontSize: '12px', fill: '#cccc66', align: 'center', fontFamily: 'sans-serif' });
+        return this.add.text(385, 420, '0', { fontSize: '48px', fill: '#cccc66', align: 'center', fontFamily: 'sans-serif' });
     }
 
     createPlatforms() {
@@ -189,18 +188,17 @@ export class GameScene extends Phaser.Scene {
         }
     }
 
-    handleOverlapDoor(event, collider) {
-        if(collider.active){
+    handleOverlapDoor(player, door) {
+        if(door.active){
             // Load the next scene
             this.scene.start(this.scene.manager.getAt(this.scene.getIndex()+1));
         }
     }
 
-    handleOverlapSwitch(event, collider) {
-        //console.log('switch collision', event, collider);
-        if(collider.active){
-            collider.setActive(false);
-            collider.anims.play('switchOff');
+    handleOverlapSwitch(player, switch) {
+        if(switch.active){
+            switch.setActive(false);
+            switch.anims.play('switchOff');
             this.disableBots();
         }
     }
