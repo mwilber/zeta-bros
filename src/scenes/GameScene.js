@@ -21,9 +21,13 @@ export class GameScene extends Phaser.Scene {
         this.load.image('ground', 'assets/images/ground.png');
         this.load.image('wall', 'assets/images/wall.png');
         this.load.image('platform', 'assets/images/platform.png');
-        this.load.spritesheet('zeta', 
-            'assets/images/zeta_spritesheet_'+this.character.name+'.png',
-            { frameWidth: 40, frameHeight: this.character.height }
+        this.load.spritesheet('zeta_alpha', 
+            'assets/images/zeta_spritesheet_alpha.png',
+            { frameWidth: 40, frameHeight: 66 }
+        );
+        this.load.spritesheet('zeta_beta', 
+            'assets/images/zeta_spritesheet_beta.png',
+            { frameWidth: 40, frameHeight: 60 }
         );
         this.load.spritesheet('door', 
             'assets/images/door.png',
@@ -37,9 +41,19 @@ export class GameScene extends Phaser.Scene {
             'assets/images/protector_spritesheet.png',
             { frameWidth: 50, frameHeight: 50 }
         );
+
+        this.load.audio('aud_end_game', 'assets/audio/end_game.wav');
+        this.load.audio('aud_jump', 'assets/audio/jump.wav');
+        this.load.audio('aud_walk', 'assets/audio/walk.wav');
+        this.load.audio('aud_power_down', 'assets/audio/power_down.wav');
+        this.load.audio('aud_power_up', 'assets/audio/power_up.wav');
+        this.load.audio('aud_success', 'assets/audio/success.mp3');
+        this.load.audio('aud_bot_kill', 'assets/audio/bot_kill.mp3');
     }
 
     create() {
+
+        this.charactername = 'zeta_'+localStorage.getItem("character");
 
         this.botKillCount = 0;
 
@@ -48,6 +62,9 @@ export class GameScene extends Phaser.Scene {
 
         // Set up sprite animations
         this.initAnimation();
+
+        // Set up the sound fx
+        this.createAudio();
 
         // Add a game controller with devault arrow keys
         this.cursors = this.input.keyboard.createCursorKeys();
@@ -87,27 +104,42 @@ export class GameScene extends Phaser.Scene {
     update(scenetime) {
 
         if (this.cursors.left.isDown){
+            if(!this.audWalk.isPlaying && this.player.body.touching.down) this.audWalk.play();
             this.player.setVelocityX(-200);
             this.player.anims.play('left', true);
         }else if (this.cursors.right.isDown){
+            if(!this.audWalk.isPlaying && this.player.body.touching.down) this.audWalk.play();
             this.player.setVelocityX(200);
             this.player.anims.play('right', true);
         }else{
+            this.audWalk.stop();
             this.player.setVelocityX(0);
             this.player.anims.play('turn');
         }
 
         if (this.cursors.up.isDown && this.player.body.touching.down){
+            this.audJump.play();
             this.player.setVelocityY(-750);
         }
 
         if( this.botKillCount >= this.botSpawnCount ){
             // All bots destroyed
+            this.audSuccess.play();
             this.botKillCount = 0;
             this.door.setActive(true);
             this.door.anims.play('doorOpen');
         }
 
+    }
+
+    createAudio(){
+        this.audEndGame = this.sound.add('aud_end_game');
+        this.audJump = this.sound.add('aud_jump');
+        this.audWalk = this.sound.add('aud_walk');
+        this.audPowerDown = this.sound.add('aud_power_down');
+        this.audPowerUp = this.sound.add('aud_power_up');
+        this.audSuccess = this.sound.add('aud_success');
+        this.audBotKill = this.sound.add('aud_bot_kill');
     }
 
     createSwitches(){
@@ -148,7 +180,7 @@ export class GameScene extends Phaser.Scene {
     }
 
     createPlayer() {
-        let player = this.physics.add.sprite(400, 450, 'zeta');
+        let player = this.physics.add.sprite(400, 450, this.charactername);
 
         player.setBounce(0.2);
         player.setCollideWorldBounds(true);
@@ -179,8 +211,10 @@ export class GameScene extends Phaser.Scene {
 
     handleCollisionEnemy(player, bot) {
         if(bot.active){
+            this.audEndGame.play();
             this.scene.start('EndScene');
         }else{
+            this.audBotKill.play();
             let tmpbot = this.physics.add.staticSprite(bot.x, bot.y, 'bot');
             tmpbot.anims.play('botAsplode');
             bot.destroy();
@@ -220,6 +254,7 @@ export class GameScene extends Phaser.Scene {
     }
 
     disableBots(){
+        this.audPowerDown.play();
         for( let bot of this.bots.getChildren() ){
             bot.setVelocity(0,0).setActive(false);
         }
@@ -231,6 +266,7 @@ export class GameScene extends Phaser.Scene {
     }
 
     enableBots(){
+        this.audPowerUp.play();
         for( let botSwitch of this.switches.getChildren() ){
             botSwitch.anims.play('switchOn');
             botSwitch.setActive(true);
@@ -242,22 +278,28 @@ export class GameScene extends Phaser.Scene {
     }
 
     initAnimation() {
+
+        // Clear out the zeta anims to allow for character change
+        this.anims.remove('left');
+        this.anims.remove('turn');
+        this.anims.remove('right');
+
         this.anims.create({
             key: 'left',
-            frames: this.anims.generateFrameNumbers('zeta', { start: 0, end: 3 }),
+            frames: this.anims.generateFrameNumbers(this.charactername, { start: 0, end: 3 }),
             frameRate: 20,
             repeat: -1
         });
 
         this.anims.create({
             key: 'turn',
-            frames: [ { key: 'zeta', frame: 4 } ],
+            frames: [ { key: this.charactername, frame: 4 } ],
             frameRate: 20
         });
 
         this.anims.create({
             key: 'right',
-            frames: this.anims.generateFrameNumbers('zeta', { start: 5, end: 8 }),
+            frames: this.anims.generateFrameNumbers(this.charactername, { start: 5, end: 8 }),
             frameRate: 20,
             repeat: -1
         });
