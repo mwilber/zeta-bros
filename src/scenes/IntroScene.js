@@ -25,6 +25,7 @@ export class IntroScene extends Phaser.Scene {
         this.load.audio('aud_intro_title', 'assets/audio/intro_title.wav');
         this.load.audio('aud_intro_wooshhit', 'assets/audio/intro_woosh_hit.mp3');
         this.load.audio('aud_select', 'assets/audio/intro_select.mp3');
+        //this.load.audio('aud_intro_loop','assets/audio/intro_loop.mp3')
     }
 
     create() {
@@ -55,6 +56,7 @@ export class IntroScene extends Phaser.Scene {
         this.audSelect = this.sound.add('aud_select');
         this.audTitle = this.sound.add('aud_intro_title');
         this.audWooshHit = this.sound.add('aud_intro_wooshhit');
+        //this.audLoop = this.sound.add('aud_intro_loop');
 
         // Add the background image
         this.bkg = this.add.image(400, 300, 'intro_bkg').setAlpha(0);
@@ -97,7 +99,7 @@ export class IntroScene extends Phaser.Scene {
             ease: 'Bounce.easeOut',
             duration: 1000,
             delay: 0,
-            onStart: ()=>{/*this.audTitle.play()*/}
+            onStart: ()=>{/*this.audLoop.play('',{loop:true})*/}
         });
 
         timeline.play();
