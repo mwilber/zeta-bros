@@ -46,6 +46,10 @@ export class GameScene extends Phaser.Scene {
         this.load.audio('aud_end_game', 'assets/audio/end_game.wav');
         this.load.audio('aud_jump', 'assets/audio/jump.wav');
         this.load.audio('aud_walk', 'assets/audio/walk.wav');
+        this.load.audio('aud_power_down', 'assets/audio/power_down.wav');
+        this.load.audio('aud_power_up', 'assets/audio/power_up.wav');
+        this.load.audio('aud_success', 'assets/audio/success.mp3');
+        this.load.audio('aud_bot_kill', 'assets/audio/bot_kill.mp3');
     }
 
     create() {
@@ -121,6 +125,7 @@ export class GameScene extends Phaser.Scene {
 
         if( this.botKillCount >= this.botSpawnCount ){
             // All bots destroyed
+            this.audSuccess.play();
             this.botKillCount = 0;
             this.door.setActive(true);
             this.door.anims.play('doorOpen');
@@ -132,6 +137,10 @@ export class GameScene extends Phaser.Scene {
         this.audEndGame = this.sound.add('aud_end_game');
         this.audJump = this.sound.add('aud_jump');
         this.audWalk = this.sound.add('aud_walk');
+        this.audPowerDown = this.sound.add('aud_power_down');
+        this.audPowerUp = this.sound.add('aud_power_up');
+        this.audSuccess = this.sound.add('aud_success');
+        this.audBotKill = this.sound.add('aud_bot_kill');
     }
 
     createSwitches(){
@@ -206,6 +215,7 @@ export class GameScene extends Phaser.Scene {
             this.audEndGame.play();
             this.scene.start('EndScene');
         }else{
+            this.audBotKill.play();
             let tmpbot = this.physics.add.staticSprite(bot.x, bot.y, 'bot');
             tmpbot.anims.play('botAsplode');
             bot.destroy();
@@ -247,6 +257,7 @@ export class GameScene extends Phaser.Scene {
     }
 
     disableBots(){
+        this.audPowerDown.play();
         for( let bot of this.bots.getChildren() ){
             bot.setVelocity(0,0).setActive(false);
         }
@@ -258,6 +269,7 @@ export class GameScene extends Phaser.Scene {
     }
 
     enableBots(){
+        this.audPowerUp.play();
         for( let botSwitch of this.switches.getChildren() ){
             botSwitch.anims.play('switchOn');
             botSwitch.setActive(true);
