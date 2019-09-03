@@ -8,10 +8,17 @@ Built with the [gz-webpack-boilerplate](https://github.com/mwilber/gz-webpack-bo
 ![Zeta Bros. ScreenShot](https://www.greenzeta.com/wp-content/uploads/2019/08/25_revized_level.png)
 
 ## Table of contents
+- [The Presentation](#presentation)
 - [Setup](#setup)
 - [Development](#development)
 - [Deployment](#deployment)
 - [Webpack](#webpack)
+
+## Presentation
+
+Slides from the presentation are available on [slides.com](https://slides.com/greenzeta/phaser#/). To follow development of the game as presented, look at the sequential numbered branches named beginning with [Step1-boilerplate](https://github.com/mwilber/zeta-bros/tree/Step1-boilerplace). 
+
+![Zeta Bros. ScreenShot](https://www.greenzeta.com/wp-content/uploads/2019/09/Screen-Shot-2019-09-03-at-7.25.34-PM.png)
 
 ## Setup
 Clone this repo and enter the project directory:
