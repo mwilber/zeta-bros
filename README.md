@@ -1,9 +1,11 @@
-# ![GreenZeta Logo](https://staging.greenzeta.com/zetabros/assets/icons/icon-72x72.png) zeta-bros
+# ![Zeta Bros. Logo](https://staging.greenzeta.com/zetabros/assets/icons/icon-72x72.png) zeta-bros
 ## Source code for the presentation: HTML5 game development example using the Phaser framework.
 
 Zeta Bros. is a [Phaser3](http://phaser.io) clone of the original Mario Bros. arcade game. Written in ES6 syntax javascript and using a webpack workflow. 
 
-Built with the [gz-webpack-boilerplate](https://github.com/mwilber/gz-webpack-boilerplate)! Visit the project page for more information.  
+Built with the [gz-webpack-boilerplate](https://github.com/mwilber/gz-webpack-boilerplate)!
+
+![Zeta Bros. ScreenShot](https://www.greenzeta.com/wp-content/uploads/2019/08/25_revized_level.png)
 
 ## Table of contents
 - [Setup](#setup)
