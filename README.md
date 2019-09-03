@@ -14,13 +14,13 @@ Built with the [gz-webpack-boilerplate](https://github.com/mwilber/gz-webpack-bo
 - [Webpack](#webpack)
 
 ## Setup
-From within your project directory:
+Clone this repo and enter the project directory:
 ```sh
 $ git clone https://github.com/mwilber/zeta-bros/
-```
-Install dev dependencies
-```sh
 $ cd zeta-bros
+```
+Install dependencies:
+```sh
 $ npm install
 ```
 
