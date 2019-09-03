@@ -20,6 +20,7 @@ $ git clone https://github.com/mwilber/zeta-bros/
 ```
 Install dev dependencies
 ```sh
+$ cd zeta-bros
 $ npm install
 ```
 
